@@ -15,13 +15,18 @@ class ObjectDetector:
         height = max(int(height_A), int(height_B))
 
         dimensions = np.array([[0, 0], [width - 1, 0], [width - 1, height - 1],
-                        [0, height - 1]], dtype = "float32")
+                        [0, height - 1]], dtype="float32")
 
         ordered_corners = np.array(ordered_corners, dtype="float32")
 
         matrix = cv2.getPerspectiveTransform(ordered_corners, dimensions)
 
-        return cv2.warpPerspective(image, matrix, (width, height))
+        warped_image = cv2.warpPerspective(image, matrix, (width, height))
+
+        if width > height:
+            warped_image = cv2.rotate(warped_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
+        return warped_image
 
     def find_extreme_points(self, contour):
         rect = cv2.minAreaRect(contour)
@@ -50,7 +55,8 @@ class ObjectDetector:
 
         _, thresh = cv2.threshold(magnitude, 30, 255, cv2.THRESH_BINARY)
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+        if len(contours) == 0:
+            return None
         largest_contour = max(contours, key=cv2.contourArea)
         corners = self.find_extreme_points(largest_contour)
 
@@ -71,7 +77,7 @@ class ObjectDetector:
 
         contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        valid_contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 4_000]
+        valid_contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 500]
 
         detected_objects = []
         detected_cords = []
@@ -79,6 +85,9 @@ class ObjectDetector:
             x, y, w, h = cv2.boundingRect(contour)
             detected_cords.append((x, y, w, h))
             cropped_image = image[y:y + h, x:x + w]
+            corners = self.detect_corners(cropped_image)
+            if corners is not None:
+                cropped_image = self.perspective_transform(cropped_image, corners)
             detected_objects.append(cropped_image)
 
         return detected_objects, detected_cords
