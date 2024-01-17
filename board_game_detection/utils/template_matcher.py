@@ -42,9 +42,9 @@ class TemplateMatcher:
             ]
             color = colors[class_num]
             label = obj_class
-            if determined_classes[i][class_num] > 0.3:
-                # if obj_class != 'Barrel' and obj_class != 'Opponent Barrel':
-                cv2.rectangle(original_image, (x, y), (x + width, y + height), color, 2)
-                cv2.putText(original_image, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            if determined_classes[i][class_num] > 0.25:
+                if obj_class != 'Barrel' and obj_class != 'Opponent Barrel':
+                    cv2.rectangle(original_image, (x, y), (x + width, y + height), color, 2)
+                    cv2.putText(original_image, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
         return original_image
