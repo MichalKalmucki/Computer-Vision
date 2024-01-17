@@ -1,6 +1,6 @@
 # DETECTION OF OBJECTS IN A BOARD GAME WARHAMMER INVASION
 
-## All input and output videos and images are avaliable on this [drive](https://drive.google.com/drive/folders/1JzSkbbhrKlqEWeQcbRlIuNuAWMYDobcy)
+## All input and output videos are avaliable on this [drive](https://drive.google.com/drive/folders/1JzSkbbhrKlqEWeQcbRlIuNuAWMYDobcy)
 
 Authors:<br>
 
