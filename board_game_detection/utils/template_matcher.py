@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
 
-class TemplateMatcher:
 
+#class for matching templates to classes and drawing detections on image
+class TemplateMatcher:
+    #method that receives a list of templates and a list of detected objects and returns for each object vector of similarities (using opencv's match templates) to each template
     def match_templates(self, templates, detected_objects):
         determined_classes = [[] for _ in range(len(detected_objects))]
 
@@ -15,7 +17,7 @@ class TemplateMatcher:
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
                 determined_classes[i].append(max_val)
                 if j >= len(templates) -2:
-                    if obj.shape[0] + obj.shape[1] > 120:
+                    if obj.shape[0] + obj.shape[1] > 120 or obj.shape[0] + obj.shape[1] < 80:
                         determined_classes[i][j] = 0
                 if j < len(templates) - 2:
                     if obj.shape[0] + obj.shape[1] < 200:
@@ -23,6 +25,7 @@ class TemplateMatcher:
 
         return determined_classes
 
+    # method that receives detected objects and their classes and draws a rectangle around each object with its class
     def draw_detections(self, image, detected_cords, determined_classes, classes):
         original_image = image.copy()
 
@@ -39,8 +42,8 @@ class TemplateMatcher:
             ]
             color = colors[class_num]
             label = obj_class
-            if determined_classes[i][class_num] > 0.2:
-            # if obj_class != 'Barrel' and obj_class != 'Opponent Barrel':
+            if determined_classes[i][class_num] > 0.3:
+                # if obj_class != 'Barrel' and obj_class != 'Opponent Barrel':
                 cv2.rectangle(original_image, (x, y), (x + width, y + height), color, 2)
                 cv2.putText(original_image, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 

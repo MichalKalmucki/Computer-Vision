@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
 
+#class for detecting objects on an image and processing them
 class ObjectDetector:
+    #method that given corners of a rectangle on a image tilts it and rotates it so it is straight
     def perspective_transform(self, image, corners):
         ordered_corners = corners
         bottom_l, bottom_r, top_r, top_l = ordered_corners
@@ -28,6 +30,7 @@ class ObjectDetector:
 
         return warped_image
 
+    #method for finding corners of a rectangle on a image
     def find_extreme_points(self, contour):
         rect = cv2.minAreaRect(contour)
         box = cv2.boxPoints(rect)
@@ -40,6 +43,7 @@ class ObjectDetector:
 
         return bottom_left, bottom_right, top_right, top_left
 
+    #method that given an image returns the shape of the object approximated by a rectangle
     def detect_corners(self, image):
         image = image.copy()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -62,6 +66,7 @@ class ObjectDetector:
 
         return np.array(corners)
     
+    #method that given an image returns a list of detected objects and a list of their coordinates
     def detect_objects(self, image):
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
