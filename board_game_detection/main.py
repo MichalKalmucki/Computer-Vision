@@ -57,7 +57,7 @@ def main():
                'Deck', 'Opponent Deck',  # Second time since we needed seperate templates for the deck with shadow
                'Barrel', 'Opponent Barrel']
     
-    types = ['easy', 'medium', 'hard']
+    types = ['easy', 'medium', 'hard', 'very_hard']
 
     #for each processed frame there is a lot of class detections to classify events, more info on that in readme
     for type in types:
